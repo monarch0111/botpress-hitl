@@ -22,7 +22,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "node webpack.js --watch",
-    "compile": "node webpack.js --compile"
+    "compile": "node webpack.js --compile",
+    "install_in_bp": "node webpack.js --compile && npm pack && cd /Users/abhishek/Desktop/Box8/Box8-Bot && bp uninstall hitl && bp install /Users/abhishek/botpress-repo/botpress-hitl//botpress-hitl-1.0.9.tgz && cd /Users/abhishek/botpress-repo/botpress-hitl && echo 'Success'"
   },
   "repository": {
     "type": "git",

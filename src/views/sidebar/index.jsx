@@ -12,6 +12,7 @@ import 'react-toggle/style.css'
 import style from './style.scss'
 
 import User from '../user'
+import Ticket from '../ticket'
 
 export default class Sidebar extends React.Component {
 
@@ -73,6 +74,13 @@ export default class Sidebar extends React.Component {
             <OverlayTrigger placement="top" overlay={filterTooltip}>
               <i className="material-icons" style={filterStyle} onClick={::this.toggleFilter}>bookmark</i>
             </OverlayTrigger>
+          </div>
+          <div style={{
+            "position": "absolute",
+            "right": "2px",
+            "top": "10px"
+          }} >
+            <Ticket bp={this.props.bp} currentSessionId={this.props.currentSession}/>
           </div>
         </div>
         <div className={style.users} style={dynamicHeightUsersDiv}>

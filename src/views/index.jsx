@@ -147,7 +147,8 @@ export default class HitlModule extends React.Component {
         <Grid>
           <Row>
             <Col sm={3} className={style.column} lgOffset={1}>
-              <Sidebar 
+              <Sidebar
+                bp={this.props.bp} 
                 sessions={this.state.sessions} 
                 setSession={::this.setSession} 
                 currentSession={currentSessionId} 
