@@ -25,25 +25,36 @@ export default class Ticket extends React.Component {
 
 	createTicket(){
 		const mailData = {
-			to: this.customerEmailId.value,
+			to: this.supportEmailId.value,
+			cc: this.customerEmailId.value,
 			subject: this.subject.value,
 			body: this.state.mailBody
 		}
-		console.log(mailData);
-	   	// const transporter = Mailer.
-
+		this.getAxios().post('/api/createTicket', { message: mailData }).then(({data, status}) => {
+			if(status === 200){
+				::this.toggleModal()
+			} else {
+				this.errorMessage.innerText = data
+			}
+		});
 	}
 
 	getTicketBody(){
 		const sessionId = this.props.currentSessionId
 		this.getAxios().get('/api/botpress-hitl/sessions/' + sessionId)
 	    .then(({ data }) => {
-	    	let mailBody = "\n\n==============Chat History=============="
+	    	let mailBody = "Dear Customer, \n\nThanks for contacting us. We have raised the issue at our end and will revert back to you shortly.\n\n==============Chat History=============="
 	    	mailBody += data.reduce((body, message) => `${body} \n ${message.direction === "in" ? "Customer: " : "Agent: "} ${message.text}`, '')
 			this.setState({
 				mailBody: mailBody
 			})
 	    })
+	}
+
+	_handleChange(newValue){
+		this.setState({
+			mailBody: newValue.target.value
+		})
 	}
 
 	render(){
@@ -58,11 +69,13 @@ export default class Ticket extends React.Component {
 					 <Modal.Body>
 						<form ref={(form) => this.ticketForm = form} className={style.formStyle}>
 							<input type="email" placeholder="Customer Email ID" ref={(input) => this.customerEmailId = input} /> <br />
+							<input type="email" placeholder="Support Team Email ID" defaultValue="abhishek@box8.in" ref={(input) => this.supportEmailId = input} /> <br />
 							<input type="text" placeholder="Subject Line" ref={(input) => this.subject = input} /> <br />
-							<textarea rows="10" value={this.state.mailBody} />
+							<textarea rows="10" value={this.state.mailBody} onChange={::this._handleChange}/>
 						</form>
 					 </Modal.Body>
 					 <Modal.Footer>
+					 	<label className="pull-left" ref={(label) => this.errorMessage = label}> </label>
 					 	<Button bsStyle="primary" onClick={::this.createTicket}> Create </Button>
 					 	<Button onClick={::this.toggleModal}> Cancel </Button>
 					 </Modal.Footer>
