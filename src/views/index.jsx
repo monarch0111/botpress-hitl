@@ -89,7 +89,8 @@ export default class HitlModule extends React.Component {
       direction: message.direction,
       type: message.type,
       last_event_on: new Date(),
-      last_heard_on: message.direction === 'in' ? new Date() : session.last_heard_on
+      last_heard_on: message.direction === 'in' ? new Date() : session.last_heard_on,
+      sent_by: message.sent_by || 'Bot'
     })
 
     const newSessions = {

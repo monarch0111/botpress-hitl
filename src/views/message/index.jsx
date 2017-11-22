@@ -37,7 +37,6 @@ export default class Message extends React.Component {
 
   renderContent() {
     const type = this.props.content.type
-
     if (type === "message" || type === "text") {
       return this.renderText()
     }
@@ -65,6 +64,7 @@ export default class Message extends React.Component {
     return (
       <div className={style.message + ' ' + style.fromBot}>
         {this.renderContent()}
+        <span className={style.sentBy}>{this.props.content.sent_by || 'Bot'}</span>
       </div>
     )
   }

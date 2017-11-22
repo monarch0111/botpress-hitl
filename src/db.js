@@ -31,6 +31,17 @@ function initialize() {
       table.enu('direction', ['in', 'out'])
       table.timestamp('ts')
     })
+    .then(function(){
+      helpers(knex).hasColumn('hitl_messages', 'sent_by').then(status => {
+        if(!status){
+          return helpers(knex).addColumnToTable('hitl_messages', function(table){
+            table.string('sent_by')
+          })
+        } else {
+          return
+        }
+      })
+    })
   })
 }
 
@@ -96,6 +107,7 @@ function getSession(sessionId) {
 function toPlainObject(object) {
   // trims SQL queries from objects
   return _.mapValues(object, v => {
+    v = v === undefined ? 'undefined' : v
     return v.sql ? v.sql : v
   })
 }
@@ -108,6 +120,7 @@ function appendMessageToSession(event, sessionId, direction) {
     text: event.text,
     raw_message: event.raw,
     direction: direction,
+    sent_by: event.sent_by,
     ts: helpers(knex).date.now()
   }
 

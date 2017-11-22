@@ -2,7 +2,7 @@ import checkVersion from 'botpress-version-manager'
 import DB from './db'
 import _ from 'lodash'
 import path from 'path'
-import fs from 'fs'
+import fs from 'fs' 
 
 // TODO: Cleanup old sessions
 // TODO: If messages count > X, delete some
@@ -134,7 +134,8 @@ module.exports = {
           type: 'text',
           platform: session.platform,
           raw: { to: session.userId, message: message },
-          text: message
+          text: message,
+          sent_by: req.user && req.user.name
         }
 
         bp.middlewares.sendOutgoing(event)
