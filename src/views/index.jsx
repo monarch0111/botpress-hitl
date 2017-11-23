@@ -83,7 +83,7 @@ export default class HitlModule extends React.Component {
     if (!session) {
       return
     }
-
+    
     const newSession = Object.assign({}, session, { 
       text: message.text,
       direction: message.direction,

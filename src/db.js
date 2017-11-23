@@ -198,13 +198,22 @@ function getAllSessions(onlyPaused) {
 }
 
 function getSessionData(sessionId) {
-  return knex('hitl_sessions')
+  const isLite = knex.client.config.client === "sqlite3"
+  const data = knex('hitl_sessions')
   .where({ 'session_id': sessionId })
   .join('hitl_messages', 'hitl_messages.session_id', 'hitl_sessions.id')
   .orderBy('hitl_messages.id', 'desc')
   .limit(100)
-  .select('*')
-  .then(messages => _.orderBy(messages, ['id'], ['asc']))
+  if (isLite){
+    return data
+    .select('*')
+    .then(messages => _.orderBy(messages, ['id'], ['asc']))
+  }
+  else {
+    return data
+    .select('*', knex.raw("case when type = 'template' then raw_message->'payload'->'text' when type = 'postback' then raw_message->'postback'->'title' when type = 'quick_reply' then raw_message->'message'->'text' end as payload_text"))
+    .then(messages => _.orderBy(messages, ['id'], ['asc']))
+  }
 }
 
 module.exports = k => {

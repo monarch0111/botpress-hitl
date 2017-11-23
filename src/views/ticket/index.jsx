@@ -50,7 +50,7 @@ export default class Ticket extends React.Component {
 		this.getAxios().get('/api/botpress-hitl/sessions/' + sessionId)
 	    .then(({ data }) => {
 	    	let mailBody = "Dear Customer, \n\nThanks for contacting us. We have raised the issue at our end and will revert back to you shortly.\n\n==============Chat History=============="
-	    	mailBody += data.reduce((body, message) => `${body} \n ${message.direction === "in" ? "Customer: " : "Agent: "} ${message.text}`, '')
+	    	mailBody += data.reduce((body, message) => `${body} \n ${message.direction === "in" ? "Customer: " : "Agent: "} ${message.payload_text || message.text}`, '')
 			this.setState({
 				mailBody: mailBody
 			})

@@ -35,10 +35,18 @@ export default class Message extends React.Component {
     return <ReactAudioPlayer className={style.audio} src={this.props.content.text} />
   }
 
+  renderPayload(){
+    return <p>{_.includes(["undefined", "null"], String(this.props.content.payload_text)) ? '' : `${this.props.content.payload_text} / `}{this.props.content.text}</p>
+  }
+
   renderContent() {
     const type = this.props.content.type
+
     if (type === "message" || type === "text") {
       return this.renderText()
+    }
+    else if (_.includes(["quick_reply", "postback", "template"], type)){
+      return this.renderPayload()
     }
     else if (type === "image") {
       return this.renderImage()
@@ -94,7 +102,10 @@ export default class Message extends React.Component {
       "message",
       "image",
       "video",
-      "audio"
+      "audio",
+      "quick_reply",
+      "postback",
+      "template"
     ]
 
     if (!_.includes(renderedTypes, this.props.content.type)) {
