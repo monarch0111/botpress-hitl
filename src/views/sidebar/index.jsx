@@ -54,13 +54,24 @@ export default class Sidebar extends React.Component {
     return sessions.map(::this.renderUser)
   }
 
-  render() {
+  renderFilter (){
+    if(["call_center", "call_center_head"].includes(localStorage.getItem('bp/agentRole'))) {return null}
     const filterTooltip = (
       <Tooltip id="tooltip">Show only paused conversations</Tooltip>
     )
     const filterStyle = {
       color: this.props.filter ? '#56c0b2' : '#666666'
-    };
+    }
+    return (
+      <div className={style.filter}>
+        <OverlayTrigger placement="top" overlay={filterTooltip}>
+          <i className="material-icons" style={filterStyle} onClick={::this.toggleFilter}>bookmark</i>
+        </OverlayTrigger>
+      </div>
+    )
+  }
+
+  render() {
 
     const dynamicHeightUsersDiv = {
       height: innerHeight - 160
@@ -69,11 +80,7 @@ export default class Sidebar extends React.Component {
     return (
       <div className={style.sidebar}>
         <div className={style.header}>
-          <div className={style.filter}>
-            <OverlayTrigger placement="top" overlay={filterTooltip}>
-              <i className="material-icons" style={filterStyle} onClick={::this.toggleFilter}>bookmark</i>
-            </OverlayTrigger>
-          </div>
+          {::this.renderFilter()}
           <div style={{
             "position": "absolute",
             "right": "2px",

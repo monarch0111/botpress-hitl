@@ -23,7 +23,7 @@ export default class HitlModule extends React.Component {
       loading: true,
       currentSession: null,
       sessions: null,
-      onlyPaused: false
+      onlyPaused: _.includes(["call_center", "call_center_head"], localStorage.getItem('bp/agentRole')) ? true : null
     }
 
     this.updateSessionMessage = ::this.updateSessionMessage
