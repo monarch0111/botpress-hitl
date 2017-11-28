@@ -84,7 +84,7 @@ export default class HitlModule extends React.Component {
       return
     }
     
-    const newSession = Object.assign({}, session, { 
+    let newSession = Object.assign({}, session, { 
       text: message.text,
       direction: message.direction,
       type: message.type,
@@ -92,6 +92,10 @@ export default class HitlModule extends React.Component {
       last_heard_on: message.direction === 'in' ? new Date() : session.last_heard_on,
       sent_by: message.sent_by || 'Bot'
     })
+
+    if(message.direction === 'in' && !_.includes(["undefined", "null"], String(message.ip))){
+      newSession = Object.assign({}, newSession, {ip: message.ip})
+    }
 
     const newSessions = {
       total: this.state.sessions.total,

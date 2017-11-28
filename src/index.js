@@ -19,9 +19,17 @@ const incomingMiddleware = (event, next) => {
 
   return db.getUserSession(event)
   .then(session => {
+    if(event.type === "patch_user_info"){
+      const { phone_no, first_name, last_name, email } = event.user
+      const full_name = `${first_name} ${last_name}`
+      event.bp.events.emit('hitl.session.changed', Object.assign({}, {id: session.id}, {phone_no, full_name, email}))
+      return
+    }
     if (session.is_new_session) {
       event.bp.events.emit('hitl.session', session)
     }
+
+    const ip = event.raw && event.raw.ip
 
     return db.appendMessageToSession(event, session.id, 'in')
     .then(message => {

@@ -53,16 +53,17 @@ function createUserSession(event) {
     profileUrl = event.user.profile_pic || event.user.picture_url
     full_name = event.user.first_name + ' ' + event.user.last_name
   }
-
+  
   const session = { 
     platform: event.platform,
-    userId: event.user.id,
+    userId: sanitizeUserId(event.user.id),
     user_image_url: profileUrl,
     last_event_on: helpers(knex).date.now(),
     last_heard_on: helpers(knex).date.now(),
     paused: 0,
     full_name: full_name,
-    paused_trigger: null
+    paused_trigger: null,
+    ip: event.raw && event.raw.ip
   }
 
   return knex
@@ -77,8 +78,15 @@ function createUserSession(event) {
   .then(db_session => Object.assign({}, session, db_session))
 }
 
+// function updateUserSession(event, fields){
+//   const userId = (event.user && sanitizeUserId(event.user.id)) || sanitizeUserId(event.raw.to)
+//   return knex('hitl_sessions')
+//   .where({ platform: event.platform, userId: userId })
+//   .update(fields)
+// }
+
 function getUserSession(event) {
-  const userId = (event.user && event.user.id) || event.raw.to
+  const userId = (event.user && sanitizeUserId(event.user.id)) || sanitizeUserId(event.raw.to)
   return knex('hitl_sessions')
   .where({ platform: event.platform, userId: userId })
   .select('*')
@@ -109,9 +117,14 @@ function getSession(sessionId) {
 function toPlainObject(object) {
   // trims SQL queries from objects
   return _.mapValues(object, v => {
-    v = v === undefined ? 'undefined' : v
+    v = _.includes(["null", "undefined"], String(v)) ? 'undefined' : v
     return v.sql ? v.sql : v
   })
+}
+
+function sanitizeUserId(userId){
+  if(_.includes(["undefined", "null"], String(userId))) { return userId }
+  return userId.replace("webchat:", "")
 }
 
 function appendMessageToSession(event, sessionId, direction) {
@@ -126,7 +139,8 @@ function appendMessageToSession(event, sessionId, direction) {
     ts: helpers(knex).date.now()
   }
 
-  const update = { last_event_on: helpers(knex).date.now() }
+  const ip = event.raw && event.raw.ip
+  const update = { last_event_on: helpers(knex).date.now(), ip }
 
   if (direction === 'in') {
     update.last_heard_on = helpers(knex).date.now()
@@ -138,8 +152,8 @@ function appendMessageToSession(event, sessionId, direction) {
     return knex('hitl_sessions')
     .where({ id: sessionId })
     .update(update)
-    .then(() => toPlainObject(message))
-  })
+    .then(() => toPlainObject(Object.assign({}, message, {ip})))
+  })  
 }
 
 function setSessionPaused(paused, platform, userId, trigger, sessionId = null) {
@@ -182,7 +196,8 @@ function getAllSessions(onlyPaused) {
     condition = 'hitl_sessions.paused = ' + helpers(knex).bool.true()
   }
 
-  return knex.select('*').from(function() {
+  return knex.select(['q1.*', "hitl_messages.*", "hitl_sessions.*", "users.email", "users.phone_no", knex.raw("users.first_name || ' ' || users.last_name as full_name")])
+  .from(function() {
     this.select([knex.raw('max(id) as mId'), 'session_id', knex.raw('count(*) as count')])
     .from('hitl_messages')
     .groupBy('session_id')
@@ -190,6 +205,7 @@ function getAllSessions(onlyPaused) {
   })
   .join('hitl_messages', knex.raw('q1.mId'), 'hitl_messages.id')
   .join('hitl_sessions', knex.raw('q1.session_id'), 'hitl_sessions.id')
+  .leftJoin(knex.raw('users on users."userId" = hitl_sessions."userId" and users.platform = hitl_sessions.platform'))
   .whereRaw(condition)
   .orderBy('hitl_sessions.last_event_on', 'desc')
   .limit(100)

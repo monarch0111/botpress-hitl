@@ -32,6 +32,7 @@ export default class User extends React.Component {
     dateFormatted = dateFormatted.replace('minutes', 'mins').replace('seconds', 'secs')
 
     const agent = ["undefined", "null"].includes( String(this.props.session.sent_by))  ? 'Bot' : this.props.session.sent_by
+    const userDisplayName = ["undefined", "null"].includes( String(this.props.session.phone_no) )  ? (this.props.session.ip || this.props.session.full_name) : (this.props.session.full_name || this.props.session.ip)
     const textPrefix = this.props.session.direction === 'in' ? 'Customer: ' : `${agent}: `
 
     return (
@@ -41,7 +42,7 @@ export default class User extends React.Component {
           <img src={this.props.session.user_image_url} onError={::this.onErrorLoadingImage} style={imgStyle}/>
         </div>
         <div className={style.content}>
-          <h3>{this.props.session.full_name}</h3>
+          <h3>{this.props.session.platform == "facebook" ? <span className={style.facebook}>FB</span> : null} {userDisplayName}</h3>
           <h4><span className={style.textPrefix}>{textPrefix}</span>{this.props.session.text}</h4>
         </div>
         <div className={style.date}>
