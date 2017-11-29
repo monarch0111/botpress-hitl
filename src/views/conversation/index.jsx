@@ -11,6 +11,8 @@ import style from './style.scss'
 
 import Message from '../message'
 
+import Ticket from '../ticket'
+
 export default class Conversation extends React.Component {
   constructor() {
     super()
@@ -95,6 +97,13 @@ export default class Conversation extends React.Component {
               onChange={::this.togglePaused}/>
           </div>
         </OverlayTrigger>
+        <div style={{
+            "position": "absolute",
+            "right": "10px",
+            "top": "10px"
+          }} >
+            <Ticket bp={this.props.bp} currentSessionId={this.props.data.session_id}/>
+        </div>
       </div>
     )
   }

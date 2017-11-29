@@ -43,7 +43,7 @@ export default class User extends React.Component {
         </div>
         <div className={style.content}>
           <h3>
-            {!["undefined", "null"].includes(this.props.session.subplatform) ? <span className={style[`${this.props.session.subplatform}`]}>{this.props.session.subplatform}</span> : null} {userDisplayName} 
+            {!["undefined", "null"].includes(this.props.session.subplatform) ? <span className={style[`${this.props.session.subplatform}`]}>{this.props.session.subplatform}</span> : null} {userDisplayName.length < 18 ? userDisplayName : `${userDisplayName.substr(0, 15)}..`} 
           </h3>
           <h4><span className={style.textPrefix}>{textPrefix}</span>{this.props.session.text}</h4>
         </div>

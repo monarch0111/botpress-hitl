@@ -2,7 +2,11 @@ import React from 'react'
 import {
   Col,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
+  Popover,
+  Button,
+  Grid,
+  Row
 } from 'react-bootstrap'
 
 import Toggle from 'react-toggle'
@@ -12,7 +16,6 @@ import 'react-toggle/style.css'
 import style from './style.scss'
 
 import User from '../user'
-import Ticket from '../ticket'
 
 export default class Sidebar extends React.Component {
 
@@ -23,6 +26,8 @@ export default class Sidebar extends React.Component {
       allPaused: false,
       filter: true
     }
+
+    this.platformElements = {}
   }
 
   toggleAllPaused() {
@@ -38,6 +43,10 @@ export default class Sidebar extends React.Component {
 
   renderUser(value) {
     const isCurrent = value.id === this.props.currentSession
+
+    if(!this.state[value.subplatform]){
+      return null
+    }
     
     if (isCurrent || !this.props.filter || (this.props.filter && !!value.paused)) {
       return <User className={isCurrent ? style.current : ''} key={value.id} session={value} setSession={() => this.props.setSession(value.id)}></User>
@@ -71,6 +80,56 @@ export default class Sidebar extends React.Component {
     )
   }
 
+  toggleAcceptChat(subplatform) {
+    const current_state = this.state[`${subplatform}`]
+    this.setState({
+      [`${subplatform}`]: !current_state
+    })
+  }
+
+  componentDidMount() {
+    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
+
+    subplatforms.forEach(platform => {
+      this.setState({
+        [`${platform}`]: true
+      })
+    })
+  }
+
+  renderPlatformSelector() {
+    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
+
+    const popoverClickRootClose = (
+      <Popover id="popover-trigger-click-root-close" title="Select Platforms">
+        {subplatforms.map(subplatform => {
+          return (
+            <div id={subplatform}>
+            <Grid style={{width: "100%"}}>
+              <Row>
+                <Col sm={6}>
+                  {subplatform} 
+                </Col>
+                <Col sm={6}>
+                  <Toggle key={subplatform} index={subplatform} className={classnames(style.toggle, style.enabled)} checked={this.state[`${subplatform}`]} onChange={this.toggleAcceptChat.bind(this, subplatform)}/>    
+                </Col>
+              </Row>
+            </Grid>
+            </div>
+          )
+        })}
+      </Popover>
+    )
+
+    return (
+      <div>
+        <OverlayTrigger trigger="click" rootClose placement="bottom" overlay={popoverClickRootClose}>
+          <Button bsStyle="primary">Accept Chat From</Button>
+        </OverlayTrigger>
+      </div>
+    )
+  }
+
   render() {
 
     const dynamicHeightUsersDiv = {
@@ -81,13 +140,13 @@ export default class Sidebar extends React.Component {
       <div className={style.sidebar}>
         <div className={style.header}>
           {::this.renderFilter()}
-          <div style={{
+        </div>
+        <div style={{
             "position": "absolute",
             "right": "2px",
-            "top": "10px"
+            "top": "14px"
           }} >
-            <Ticket bp={this.props.bp} currentSessionId={this.props.currentSession}/>
-          </div>
+          {::this.renderPlatformSelector()}
         </div>
         <div className={style.users} style={dynamicHeightUsersDiv}>
           {::this.renderUsers()}
