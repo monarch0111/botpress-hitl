@@ -42,7 +42,9 @@ export default class User extends React.Component {
           <img src={this.props.session.user_image_url} onError={::this.onErrorLoadingImage} style={imgStyle}/>
         </div>
         <div className={style.content}>
-          <h3>{this.props.session.platform == "facebook" ? <span className={style.facebook}>FB</span> : null} {userDisplayName}</h3>
+          <h3>
+            {!["undefined", "null"].includes(this.props.session.subplatform) ? <span className={style[`${this.props.session.subplatform}`]}>{this.props.session.subplatform}</span> : null} {userDisplayName} 
+          </h3>
           <h4><span className={style.textPrefix}>{textPrefix}</span>{this.props.session.text}</h4>
         </div>
         <div className={style.date}>
