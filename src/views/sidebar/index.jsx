@@ -100,6 +100,14 @@ export default class Sidebar extends React.Component {
   renderPlatformSelector() {
     const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
 
+    subplatforms.forEach(platform => {
+      if(!Boolean(this.state[`${platform}`])){
+        this.setState({
+          [`${platform}`]: true
+        })
+      }
+    })
+
     const popoverClickRootClose = (
       <Popover id="popover-trigger-click-root-close" title="Select Platforms">
         {subplatforms.map(subplatform => {
