@@ -63,10 +63,19 @@ export default class HitlModule extends React.Component {
       return Object.assign({}, session, session.id === changes.id ? changes : {})
     })
 
+    if(changes.paused && changes.paused === 1){
+      if (_.includes(["call_center", "call_center_head"], localStorage.getItem('bp/agentRole'))){
+        const audio = new Audio('/api/botpress-hitl/static/pause_notification.mp3')
+        audio.play()
+      }
+    }
+
     this.setState({ sessions: {
       total: this.state.sessions.total,
       sessions: sessions
     }})
+
+    this.refreshSessions()
 
     if (this.state.currentSession) {
       this.setSession(this.state.currentSession.id)
