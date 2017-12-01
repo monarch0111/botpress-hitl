@@ -89,7 +89,6 @@ export default class Sidebar extends React.Component {
 
   componentDidMount() {
     const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
-
     subplatforms.forEach(platform => {
       this.setState({
         [`${platform}`]: true
@@ -99,9 +98,8 @@ export default class Sidebar extends React.Component {
 
   renderPlatformSelector() {
     const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
-
     subplatforms.forEach(platform => {
-      if(!Boolean(this.state[`${platform}`])){
+      if(["undefined", "null"].includes(String(this.state[`${platform}`]))){
         this.setState({
           [`${platform}`]: true
         })
