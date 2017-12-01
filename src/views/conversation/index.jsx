@@ -102,7 +102,7 @@ export default class Conversation extends React.Component {
             "right": "10px",
             "top": "10px"
           }} >
-            <Ticket bp={this.props.bp} currentSessionId={this.props.data.session_id}/>
+            <Ticket bp={this.props.bp} defaultCustomerEmailId={this.props.data.email} currentSessionId={this.props.data.session_id}/>
         </div>
       </div>
     )

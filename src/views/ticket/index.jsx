@@ -86,7 +86,7 @@ export default class Ticket extends React.Component {
 					</Modal.Header>
 					 <Modal.Body>
 						<form ref={(form) => this.ticketForm = form} className={style.formStyle}>
-							<input type="text" placeholder="Customer Email ID" ref={(input) => this.customerEmailId = input} /> <br />
+							<input type="text" placeholder="Customer Email ID" ref={(input) => this.customerEmailId = input} defaultValue={this.props.defaultCustomerEmailId}/> <br />
 							<input type="text" placeholder="Support Team Email ID" defaultValue="abhishek@box8.in" ref={(input) => this.supportEmailId = input} /> <br />
 							<div style={{"padding": "10px", "margin-top": "5px", "margin-bottom": "5px", "border": "2px solid rgb(238, 238, 238)"}}>
 								<Grid style={{width: "100%"}}>
