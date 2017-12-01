@@ -3,7 +3,6 @@ import DB from './db'
 import _ from 'lodash'
 import path from 'path'
 import fs from 'fs' 
-import serveStatic from 'serve-static'
 
 // TODO: Cleanup old sessions
 // TODO: If messages count > X, delete some
@@ -172,9 +171,5 @@ module.exports = {
       })
       .then(res.sendStatus(200))
     })
-
-    const modulePath = bp._loadedModules['botpress-hitl'].root
-    const staticFolder = path.join(modulePath, './static')
-    bp.getRouter('botpress-hitl', { auth: false }).use('/static', serveStatic(staticFolder))
   }
 }

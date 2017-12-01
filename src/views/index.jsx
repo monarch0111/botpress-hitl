@@ -65,7 +65,7 @@ export default class HitlModule extends React.Component {
 
     if(changes.paused && changes.paused === 1){
       if (_.includes(["call_center", "call_center_head"], localStorage.getItem('bp/agentRole'))){
-        const audio = new Audio('/api/botpress-hitl/static/pause_notification.mp3')
+        const audio = new Audio('/pause_notification.mp3')
         audio.play()
       }
     }
