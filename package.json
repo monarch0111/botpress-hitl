@@ -67,6 +67,7 @@
     "botpress-version-manager": "^1.0.2",
     "lodash": "^4.17.4",
     "moment": "^2.17.1",
+    "node-cron": "^1.2.1",
     "serve-static": "^1.13.1"
   }
 }
