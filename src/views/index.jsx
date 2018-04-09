@@ -35,6 +35,7 @@ export default class HitlModule extends React.Component {
     this.props.bp.events.on('hitl.message', this.updateSessionMessage)
     this.props.bp.events.on('hitl.session', this.refreshSessions)
     this.props.bp.events.on('hitl.session.changed', this.updateSession)
+    this.props.bp.events.on('hitl.session.refresh', this.refreshSessions)
     this.refreshSessions()
   }
 
@@ -42,6 +43,7 @@ export default class HitlModule extends React.Component {
     this.props.bp.events.off('hitl.message', this.updateSessionMessage)
     this.props.bp.events.off('hitl.session', this.refreshSessions)
     this.props.bp.events.off('hitl.session.changed', this.updateSession)
+    this.props.bp.events.off('hitl.session.refresh', this.refreshSessions)
   }
 
   refreshSessions(session) {

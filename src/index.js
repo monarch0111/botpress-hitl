@@ -3,6 +3,7 @@ import DB from './db'
 import _ from 'lodash'
 import path from 'path'
 import fs from 'fs' 
+import cron from 'node-cron'
 
 // TODO: Cleanup old sessions
 // TODO: If messages count > X, delete some
@@ -170,6 +171,12 @@ module.exports = {
         bp.events.emit('hitl.session.changed', { id: sessionId, paused: 0 })
       })
       .then(res.sendStatus(200))
+    })
+
+    cron.schedule('0 * * * *', function(){
+      db.unpauseOldSessions().then( () => {
+        bp.events.emit('hitl.session.refresh')
+      })
     })
   }
 }

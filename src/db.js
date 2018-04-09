@@ -234,6 +234,15 @@ function getSessionData(sessionId) {
   }
 }
 
+function unpauseOldSessions(){
+  return knex('hitl_sessions')
+    .whereRaw('paused = true and last_heard_on < now() - interval \'1 hour\'')
+    .update({ paused: 0 })
+    .then(() => {
+      console.log("successfully updated paused rows");
+    });
+}
+
 module.exports = k => {
   knex = k
 
@@ -245,6 +254,7 @@ module.exports = k => {
     getAllSessions,
     getSessionData,
     getSession,
-    isSessionPaused
+    isSessionPaused,
+    unpauseOldSessions
   }
 }
