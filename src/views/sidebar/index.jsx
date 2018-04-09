@@ -24,10 +24,18 @@ export default class Sidebar extends React.Component {
 
     this.state = {
       allPaused: false,
-      filter: true
+      filter: true,
+      filterUser: null
     }
 
     this.platformElements = {}
+  }
+
+  _filterUsers(newValue) {
+    let {value} = newValue.target
+    this.setState({
+      filterUser: value
+    })
   }
 
   toggleAllPaused() {
@@ -55,7 +63,18 @@ export default class Sidebar extends React.Component {
   }
 
   renderUsers() {
-    const sessions = this.props.sessions.sessions
+    let sessions;
+    if (!["undefined", "null", ""].includes(String(this.state.filterUser))){
+      sessions = this.props.sessions.sessions.filter(session => {
+        let {email, full_name, phone_no} = session
+        return [email, full_name, phone_no].reduce((x, entity) => {
+          return x + (!["null", "undefined", ""].includes(String(entity).toLowerCase()) && String(entity).toLowerCase().indexOf(this.state.filterUser) > -1) ? 1 : 0
+        }, 0) > 0
+      })
+    }
+    else{
+      sessions = this.props.sessions.sessions 
+    }
 
     if(sessions.length === 0) {
       return <p className={style.empty}>There's no conversation...</p>
@@ -142,6 +161,19 @@ export default class Sidebar extends React.Component {
       height: innerHeight - 160
     }
 
+    const searchBar = {
+      "height": "50px",
+      "width": "100%",
+      "padding": "15px",
+      "color": "#666666",
+      "fontSize": "16px",
+      "borderStyle": "none",
+      "borderBottom": "solid",
+      "borderWidth": "1px",
+      "borderBottomColor": "#d6d5d5",
+      "outlineColor": "white"
+    }
+
     return (
       <div className={style.sidebar}>
         <div className={style.header}>
@@ -155,6 +187,12 @@ export default class Sidebar extends React.Component {
           {::this.renderPlatformSelector()}
         </div>
         <div className={style.users} style={dynamicHeightUsersDiv}>
+          <div style={{
+            "position": "sticky",
+            "top": "0px",
+            "zIndex": 1000}}> 
+              <input type="text" style={searchBar} placeholder="Search... (Name / Email / Phone No) " onChange={::this._filterUsers}/> 
+          </div>
           {::this.renderUsers()}
         </div>
       </div>
