@@ -34,6 +34,7 @@ export default class User extends React.Component {
     const agent = ["undefined", "null"].includes( String(this.props.session.sent_by))  ? 'Bot' : this.props.session.sent_by
     const userDisplayName = ["undefined", "null"].includes( String(this.props.session.phone_no) )  ? (this.props.session.ip || this.props.session.full_name) : (this.props.session.full_name || this.props.session.ip)
     const textPrefix = this.props.session.direction === 'in' ? 'Customer: ' : `${agent}: `
+    const subplatform = String(this.props.session.subplatform).toUpperCase()
     return (
       <div className={classnames(style.user, this.props.className)} onClick={this.props.setSession}>
         {this.props.session.paused == 1 ? <i className="material-icons">pause_circle_filled</i> : null}
@@ -42,7 +43,7 @@ export default class User extends React.Component {
         </div>
         <div className={style.content}>
           <h3>
-            {!["undefined", "null"].includes(this.props.session.subplatform) ? <span className={style[`${this.props.session.subplatform}`]}>{this.props.session.subplatform}</span> : null} {userDisplayName.length > 10 ?  `${userDisplayName.substr(0, 10)}..` : userDisplayName} 
+            {!["undefined", "null"].includes(subplatform) ? <span><img className={style.deviceIcon} src={`/${subplatform}.png`}/></span> : null} {userDisplayName.length > 10 ?  `${userDisplayName.substr(0, 10)}..` : userDisplayName} 
           </h3>
           <h4><span className={style.textPrefix}>{textPrefix}</span>{this.props.session.text}</h4>
         </div>

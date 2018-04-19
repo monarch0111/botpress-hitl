@@ -70,31 +70,10 @@
   }
 }
 
-.FB {
-  background-color: #435e9c;
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 20px;
-  padding: 4px 4px;
-  border-radius: 4px;
-}
-
-.WEB {
-  background-color: #da3939;
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 20px;
-  padding: 4px 4px;
-  border-radius: 4px;
-}
-
-.POS {
-  background-color: #1abc9c;
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 20px;
-  padding: 4px 4px;
-  border-radius: 4px;
+.deviceIcon{
+  height: 16px !important;
+  width: 16px !important;
+  border-radius: 0% !important;
 }
 
 .user:hover {

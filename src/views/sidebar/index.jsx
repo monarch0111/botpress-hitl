@@ -107,7 +107,7 @@ export default class Sidebar extends React.Component {
   }
 
   componentDidMount() {
-    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
+    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => String(obj.subplatform).toUpperCase()))]
     subplatforms.forEach(platform => {
       this.setState({
         [`${platform}`]: true
@@ -116,9 +116,9 @@ export default class Sidebar extends React.Component {
   }
 
   renderPlatformSelector() {
-    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => obj.subplatform))]
+    const subplatforms = [...new Set(this.props.sessions.sessions.map(obj => String(obj.subplatform).toUpperCase()))]
     subplatforms.forEach(platform => {
-      if(["undefined", "null"].includes(String(this.state[`${platform}`]))){
+      if(["UNDEFINED", "NULL"].includes(String(this.state[`${platform}`]).toUpperCase())){
         this.setState({
           [`${platform}`]: true
         })
@@ -132,10 +132,10 @@ export default class Sidebar extends React.Component {
             <div id={subplatform}>
             <Grid style={{width: "100%"}}>
               <Row>
-                <Col sm={6}>
-                  {subplatform} 
+                <Col sm={8}>
+                  <span><img style={{width: "16px", height: "16px"}} src={`/${String(subplatform).toUpperCase()}.png`}/></span> {subplatform} 
                 </Col>
-                <Col sm={6}>
+                <Col sm={4}>
                   <Toggle key={subplatform} index={subplatform} className={classnames(style.toggle, style.enabled)} checked={this.state[`${subplatform}`]} onChange={this.toggleAcceptChat.bind(this, subplatform)}/>    
                 </Col>
               </Row>
