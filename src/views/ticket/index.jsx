@@ -50,7 +50,13 @@ export default class Ticket extends React.Component {
 		this.getAxios().get('/api/botpress-hitl/sessions/' + sessionId)
 	    .then(({ data }) => {
 	    	let mailBody = "Dear Customer, \n\nThanks for contacting us. We have raised the issue at our end and will revert back to you shortly.\n\n==============Chat History=============="
-	    	mailBody += data.reduce((body, message) => `${body} \n${message.direction === "in" ? "Customer: " : "Agent: "} ${message.payload_text || message.text}`, '')
+	    	mailBody += data.reduce((body, message) => {
+          let text = message.payload_text || message.text
+          if(message.type === "file"){
+            text = text + ` [${message.raw_message.data.url}] `
+          }
+          return `${body} \n${message.direction === "in" ? "Customer: " : "Agent: "} ${text}`
+        }, '')
 			this.setState({
 				mailBody: mailBody
 			})
@@ -87,7 +93,7 @@ export default class Ticket extends React.Component {
 					 <Modal.Body>
 						<form ref={(form) => this.ticketForm = form} className={style.formStyle}>
 							<input type="text" placeholder="Customer Email ID" ref={(input) => this.customerEmailId = input} defaultValue={this.props.defaultCustomerEmailId}/> <br />
-							<input type="text" placeholder="Support Team Email ID" defaultValue="abhishek@box8.in" ref={(input) => this.supportEmailId = input} /> <br />
+							<input type="text" placeholder="Support Team Email ID" defaultValue="talk@box8.in" ref={(input) => this.supportEmailId = input} /> <br />
 							<div style={{"padding": "10px", "margin-top": "5px", "margin-bottom": "5px", "border": "2px solid rgb(238, 238, 238)"}}>
 								<Grid style={{width: "100%"}}>
 									<Row>

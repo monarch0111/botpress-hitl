@@ -82,10 +82,15 @@ export default class Conversation extends React.Component {
   renderHeader() {
     const pausedTooltip = <Tooltip id="pausedTooltip">Pause this conversation</Tooltip>
     const userDisplayName = ["undefined", "null"].includes( String(this.props.data.phone_no) )  ? (this.props.data.ip || this.props.data.full_name) : `${this.props.data && this.props.data.full_name}${this.props.data && this.props.data.phone_no && ' / ' + this.props.data.phone_no}`
+
     return (
       <div>
         <h3>
-          { userDisplayName }
+          {
+            this.props.data && this.props.data.phone_no
+            ? <a target="_blank" href={`http://ops.box8.co.in/#/customer?phone=${this.props.data.phone_no}&brand_id=1`}> {userDisplayName} </a>
+            : userDisplayName
+          }
           {this.props.data && !!this.props.data.paused
             ? <span className={style.pausedWarning}>Paused</span>
             : null}
