@@ -174,12 +174,7 @@ export default class HitlModule extends React.Component {
             <Col sm={9} className={style.column} lg={7}>
               <Row>
                 <Col sm={12}>
-                  <Conversation bp={this.props.bp} data={this.state.currentSession}/>
-                </Col>
-              </Row>
-              <Row>
-                <Col sm={12}>
-                  <Typing sendMessage={::this.sendMessage}/>
+                  <Conversation bp={this.props.bp} data={this.state.currentSession} sendMessage={::this.sendMessage}/>
                 </Col>
               </Row>
             </Col>

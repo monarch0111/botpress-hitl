@@ -1,6 +1,6 @@
 .message {
   margin: 10px;
-  max-width: 50%;
+  max-width: 65%;
 
   p {
     display: block;
@@ -45,4 +45,17 @@
   font-size: 10px;
   float: right;
   color: #a7a7a7;
+}
+
+.Bot{
+  p {
+    background-color: #e6e6e6 !important;
+    color: black !important;
+  }
+}
+
+.Agent {
+  p {
+    background-color: #a076d8 !important;
+  }
 }

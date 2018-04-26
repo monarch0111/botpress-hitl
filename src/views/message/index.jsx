@@ -18,7 +18,11 @@ export default class Message extends React.Component {
   }
 
   renderText() {
-    return <p>{this.props.content.text}</p>
+    return (<p>{
+      this.props.content.text.split("\n").map(x => {
+        return (<div> {x} </div>)
+      })
+    }</p>)
   }
 
   renderImage() {
@@ -96,9 +100,9 @@ export default class Message extends React.Component {
 
   renderMessageFromBot() {
     return (
-      <div className={style.message + ' ' + style.fromBot}>
+      <div className={style.message + ' ' + style.fromBot + ' ' + (!!this.props.content.sent_by ? style.Agent : style.Bot)}>
         {this.renderContent()}
-        <span className={style.sentBy}>{this.props.content.sent_by || 'Bot'}</span>
+        <span className={style.sentBy}>Sent by <strong><span style={{"color": "black"}}>{this.props.content.sent_by || 'Bot'}</span></strong>, {moment(this.props.content.ts).fromNow().replace('minutes', 'mins').replace('seconds', 'secs')} </span>
       </div>
     )
   }

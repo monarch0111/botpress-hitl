@@ -12,12 +12,13 @@ import style from './style.scss'
 import Message from '../message'
 
 import Ticket from '../ticket'
+import Typing from '../typing'
 
 export default class Conversation extends React.Component {
   constructor() {
     super()
 
-    this.state = { loading: true, messages: null }
+    this.state = { loading: true, messages: null, agentsActive: [], currentAgent: localStorage.getItem("bp/agentName") }
     this.appendMessage = ::this.appendMessage
   }
 
@@ -38,7 +39,11 @@ export default class Conversation extends React.Component {
 
   appendMessage(message) {
     if (this.state.messages && this.props.data && this.props.data.id === message.session_id) {
-      this.setState({ messages: [...this.state.messages, message] })
+      let dataToBeUpdated = { messages: [...this.state.messages, message] }
+      if(!this.state.agentsActive.includes(message.sent_by)){
+        dataToBeUpdated['agentsActive'] = [...this.state.agentsActive, message.sent_by]
+      }
+      this.setState(dataToBeUpdated)
       setTimeout(::this.scrollToBottom, 50)
     }
   }
@@ -71,10 +76,10 @@ export default class Conversation extends React.Component {
     return this.getAxios().get('/api/botpress-hitl/sessions/' + sessionId)
     .then(({ data }) => {
       this.setState({
+        agentsActive: Array.from(new Set(data.map(message => message.sent_by || "Bot"))),
         loading: false,
         messages: data
       })
-
       setTimeout(::this.scrollToBottom, 50)
     })
   }
@@ -119,6 +124,10 @@ export default class Conversation extends React.Component {
     }
 
     return (
+      <div>
+      <div className={style.agentDetails} style={{ "backgroundColor": "#7581d9d9"}}> 
+        Agents Engaged: <strong>  {this.state.agentsActive.join(", ")} </strong>
+      </div>
       <div className={style.innerMessages}
         id="innerMessages"
         ref="innerMessages"
@@ -127,9 +136,26 @@ export default class Conversation extends React.Component {
           return <Message key={i} content={m}/>
         })}
       </div>
+      </div>
     )
   }
 
+  sendMessage (message) {
+    this.props.sendMessage(message)
+  }
+
+  joinChat(){
+    this.setState({
+      agentsActive: [...this.state.agentsActive, this.state.currentAgent]
+    })
+  }
+
+  renderTypeArea() {
+    let allowed = (this.state.agentsActive.includes(this.state.currentAgent) || this.state.agentsActive.join("") === "Bot")
+    return(
+      <Typing joinChat={::this.joinChat} agentsEngaged={this.state.agentsActive} allowed={allowed} sendMessage={::this.sendMessage}/>
+    )
+  }
 
   render() {
     const dynamicHeightStyleMessageDiv = {
@@ -144,6 +170,7 @@ export default class Conversation extends React.Component {
         <div className={style.messages} style={dynamicHeightStyleMessageDiv}>
           {this.props.data ? ::this.renderMessages() : null}
         </div>
+        {::this.renderTypeArea()}
       </div>
     )
   }
