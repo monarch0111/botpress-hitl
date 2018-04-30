@@ -205,7 +205,7 @@ function getAllSessions(onlyPaused) {
   })
   .join('hitl_messages', knex.raw('q1.mId'), 'hitl_messages.id')
   .join('hitl_sessions', knex.raw('q1.session_id'), 'hitl_sessions.id')
-  .leftJoin(knex.raw('users on users."userId" = hitl_sessions."userId" and users.platform = hitl_sessions.platform'))
+  .join(knex.raw('users on users."userId" = hitl_sessions."userId" and users.platform = hitl_sessions.platform'))
   .whereRaw(condition)
   .orderBy('hitl_sessions.last_event_on', 'desc')
   .limit(100)

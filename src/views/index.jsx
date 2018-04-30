@@ -37,6 +37,9 @@ export default class HitlModule extends React.Component {
     this.props.bp.events.on('hitl.session.changed', this.updateSession)
     this.props.bp.events.on('hitl.session.refresh', this.refreshSessions)
     this.refreshSessions()
+    if('Notification' in window){
+      Notification.requestPermission();
+    }
   }
 
   componentWillUnmount() {
@@ -56,6 +59,16 @@ export default class HitlModule extends React.Component {
     })
   }
 
+  sendNotification(){
+    if('Notification' in window){
+      if(Notification.permission === 'granted'){
+        new Notification("Customer is waiting for reply.", { requireInteraction: true })
+      } else {
+        alert("Customer is waiting for reply.")
+      }
+    }
+  }
+
   updateSession(changes) {
     if (!this.state.sessions) {
       return
@@ -69,6 +82,7 @@ export default class HitlModule extends React.Component {
       if (_.includes(["call_center", "call_center_head"], localStorage.getItem('bp/agentRole'))){
         const audio = new Audio('/pause_notification.mp3')
         audio.play()
+        ::this.sendNotification()
       }
     }
 

@@ -25,14 +25,10 @@ export default class User extends React.Component {
   }
 
   render() {
-    const imgStyle = {
-      display: this.state.displayImg
-    }
-    // <span className={style.textPrefix}>{textPrefix}</span>{this.props.session.text}
     let dateFormatted = moment(this.props.session.last_event_on).fromNow()
     dateFormatted = dateFormatted.replace('minutes', 'mins').replace('seconds', 'secs')
-    const agent = ["undefined", "null"].includes( String(this.props.session.sent_by))  ? 'Bot' : this.props.session.sent_by
-    const userDisplayName = ["undefined", "null"].includes( String(this.props.session.phone_no) )  ? (this.props.session.ip || this.props.session.full_name) : (this.props.session.full_name || this.props.session.ip)
+    const agent = ["undefined", "null"].includes(String(this.props.session.sent_by)) ? 'Bot' : this.props.session.sent_by
+    const userDisplayName = ["undefined", "null"].includes(String(this.props.session.phone_no)) ? (this.props.session.ip || this.props.session.full_name) : (this.props.session.full_name || this.props.session.ip)
     const textPrefix = this.props.session.direction === 'in' ? 'Customer: ' : `${agent}: `
     const subplatform = String(this.props.session.subplatform).toUpperCase()
     return (
@@ -42,7 +38,7 @@ export default class User extends React.Component {
           <h3>
             {!["undefined", "null"].includes(subplatform) ? <span><img className={style.deviceIcon} src={`/${subplatform}.png`}/></span> : null} {userDisplayName.length > 10 ?  `${userDisplayName.substr(0, 10)}..` : userDisplayName} 
           </h3>
-          <h4>Last Agent: {agent}</h4>
+          <h4 className={this.props.session.direction === "in" ? style.waitingStyle : null}> {this.props.session.direction === "in" ? "Reply Awaited" : `Last Agent: ${this.props.session.sent_by || 'Bot'}`} </h4>
         </div>
         <div className={style.date}>
           <h5>{dateFormatted}</h5>

@@ -51,10 +51,6 @@ export default class Sidebar extends React.Component {
 
   renderUser(value) {
     const isCurrent = value.id === this.props.currentSession
-
-    // if(!this.state[value.subplatform]){
-    //   return null
-    // }
     
     if (isCurrent || !this.props.filter || (this.props.filter && !!value.paused)) {
       return <User className={isCurrent ? style.current : ''} key={value.id} session={value} setSession={() => this.props.setSession(value.id)}></User>
