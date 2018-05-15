@@ -16,6 +16,8 @@ export default class User extends React.Component {
       displayImg: 'block',
       agentsEngaged: []
     }
+
+    this.getBrandImage = ::this.getBrandImage
   }
 
   onErrorLoadingImage() {
@@ -23,6 +25,20 @@ export default class User extends React.Component {
       displayImg: 'none'
     })
   }
+
+  getBrandImage(brandId) {
+    const brandIcons = {
+      1: 'https://box8.in/favicon.ico',
+      13: 'https://mojopizza.in/favicon.ico',
+    }
+
+    return (
+      <div>
+        <img src={brandIcons[brandId]} className={style.brand_icon} />
+      </div>
+    );
+  }
+
 
   render() {
     let dateFormatted = moment(this.props.session.last_event_on).fromNow()
@@ -42,6 +58,7 @@ export default class User extends React.Component {
         </div>
         <div className={style.date}>
           <h5>{dateFormatted}</h5>
+          { this.getBrandImage(this.props.session.brand_id) }
         </div>
       </div>
     )

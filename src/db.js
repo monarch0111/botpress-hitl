@@ -196,7 +196,7 @@ function getAllSessions(onlyPaused) {
     condition = 'hitl_sessions.paused = ' + helpers(knex).bool.true()
   }
 
-  return knex.select(['q1.*', "hitl_messages.*", "hitl_sessions.*", "users.email", "users.phone_no", "users.subplatform", knex.raw("users.first_name || ' ' || users.last_name as full_name")])
+  return knex.select(['q1.*', "hitl_messages.*", "hitl_sessions.*", "users.email", "users.phone_no", "users.subplatform", knex.raw("case when users.brand_id is null then '1' else users.brand_id end as brand_id"), knex.raw("users.first_name || ' ' || users.last_name as full_name")])
   .from(function() {
     this.select([knex.raw('max(id) as mId'), 'session_id', knex.raw('count(*) as count')])
     .from('hitl_messages')
