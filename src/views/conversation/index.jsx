@@ -120,12 +120,12 @@ export default class Conversation extends React.Component {
 
   renderMessages() {
     const dynamicHeightStyleInnerMessageDiv = {
-      maxHeight: innerHeight - 210
+      maxHeight: innerHeight - 250
     }
 
     return (
       <div>
-      <div className={style.agentDetails} style={{ "backgroundColor": "#7581d9d9"}}> 
+      <div className={style.agentDetails} style={{ "backgroundColor": "#7581d9d9"}}>
         Agents Engaged: <strong>  {this.state.agentsActive.join(", ")} </strong>
       </div>
       <div className={style.innerMessages}
